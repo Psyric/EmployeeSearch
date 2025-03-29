@@ -1,3 +1,4 @@
+
 #include <string.h> 
 
 #include "employee.h" 
@@ -20,8 +21,9 @@
 
 //()(The second set of parentheses is the arguments of the function call) 
 
-static PtrToEmployee searchEmployeeTable(PtrToConstEmployee ptr, int tableSize, const void *targetPtr, 
-int(*functionPtr)(const void *, PtrToConstEmployee)) 
+static PtrToEmployee searchEmployeeTable(PtrToConstEmployee ptr, int tableSize, const void *targetPtr,  
+
+    int (*functionPtr)(const void *, PtrToConstEmployee)) 
 
 { 
 
@@ -31,7 +33,7 @@ int(*functionPtr)(const void *, PtrToConstEmployee))
 
         if ((*functionPtr)(targetPtr, ptr) == 0) 
 
-        return (PtrToEmployee) ptr; 
+            return (PtrToEmployee) ptr; 
 
     return NULL; 
 
@@ -52,29 +54,5 @@ static int compareEmployeeName(const void *targetPtr, PtrToConstEmployee tableVa
 { 
 
     return strcmp((char *) targetPtr, tableValuePtr->name);//const void *targetPtr ==> typecast as char pointer then pass into strcmp() 
-
-} 
-
- 
-
- 
-
- 
-
-//These are called wrappers. These functions are what you will use in your main!!! 
-
-PtrToEmployee searchEmployeeByNumber(PtrToConstEmployee ptr, int size, long number) 
-
-{ 
-
-    return searchEmployeeTable(ptr, size, &number, compareEmployeeNumber); 
-
-} 
-
-PtrToEmployee searchEmployeeByName(PtrToConstEmployee ptr, int size, char* name) 
-
-{ 
-
-    return searchEmployeeTable(ptr, size, name, compareEmployeeName); 
 
 } 
