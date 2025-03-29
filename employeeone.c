@@ -1,47 +1,62 @@
 #include <string.h>
-#include "employee.h"
+#include "Employee.h"
 
-static PtrToEmployee searchEmployeeTable(PtrToConstEmployee ptr, int tableSize, const void *targetPtr,
-                                         int (*functionPtr)(const void *, PtrToConstEmployee))
-{
-    PtrToConstEmployee endPtr = ptr + tableSize;
+PtrToEmployee searchEmployeeByNumber(PtrToConstEmployee ptr, int tableSize, long targetNumber) {
+    const PtrToConstEmployee endPtr = ptr + tableSize; // Pointer arithmetic to find the end of the array
 
-    for (; ptr < endPtr; ptr++)
+    for (; ptr < endPtr; ptr++) // Loop through the array until the end
     {
-        if ((*functionPtr)(targetPtr, ptr) == 0)
-        {
-            return (PtrToEmployee)ptr;
-        }
+        if (ptr->number == targetNumber) // Check if the current employee's number matches the target number
+            return (PtrToEmployee)ptr; // Return the pointer to the matching employee
     }
-    return NULL;
-}
 
-static int compareEmployeeNumber(const void *targetPtr, PtrToConstEmployee tableValuePtr)
-{
-    return *(long *)targetPtr != tableValuePtr->number; // const void *targetPtr ==> typecast as int pointer then dereference
+    return NULL; // Return NULL if no matching employee is found
 }
+ 
+//Essentially the same functionality as above but comparing strings to check if equal 
 
-static int compareEmployeeName(const void *targetPtr, PtrToConstEmployee tableValuePtr)
-{
-    return strcmp((char *)targetPtr, tableValuePtr->name); // const void *targetPtr ==> typecast as char pointer then pass into strcmp()
-}
+PtrToEmployee searchEmployeeByName(PtrToConstEmployee ptr, int tableSize,char * targetName){ 
 
-static int compareEmployeePhoneNumber(const void *targetPtr, PtrToConstEmployee tableValuePtr)
-{
-    return strcmp((char *)targetPtr, tableValuePtr->phone); // const void *targetPtr ==> typecast as char pointer then pass into strcmp()
-}
+    const PtrToConstEmployee endPtr = ptr + tableSize; 
 
-PtrToEmployee searchEmployeeByNumber(PtrToConstEmployee ptr, int size, long number)
-{
-    return searchEmployeeTable(ptr, size, &number, compareEmployeeNumber);
-}
+    for(; ptr < endPtr; ptr++) 
 
-PtrToEmployee searchEmployeeByName(PtrToConstEmployee ptr, int size, char *name)
-{
-    return searchEmployeeTable(ptr, size, name, compareEmployeeName);
-}
+    { 
+        if(strcmp(ptr->name,targetName) == 0) 
 
-PtrToEmployee searchEmployeeByPhoneNumber(PtrToConstEmployee ptr, int size, char *phoneNumber)
-{
-    return searchEmployeeTable(ptr, size, phoneNumber, compareEmployeePhoneNumber);
+            return (PtrToEmployee) ptr; 
+
+        } 
+
+    return NULL; 
+
+} 
+
+PtrToEmployee searchEmployeeByPhone(PtrToConstEmployee ptr, int tableSize,char * targetPhone){ 
+
+    const PtrToConstEmployee endPtr = ptr + tableSize; 
+
+    for(; ptr < endPtr; ptr++) 
+
+    { 
+        if(strcmp(ptr->phone,targetPhone) == 0) 
+
+            return (PtrToEmployee) ptr; 
+
+        } 
+
+    return NULL; 
+
+} 
+
+PtrToEmployee searchEmployeeBySalary(PtrToConstEmployee ptr, int tableSize, double targetSalary) {
+    const PtrToConstEmployee endPtr = ptr + tableSize; // Pointer arithmetic to find the end of the array
+
+    for (; ptr < endPtr; ptr++) // Loop through the array until the end
+    {
+        if (ptr->salary == targetSalary) // Check if the current employee's number matches the target number
+            return (PtrToEmployee)ptr; // Return the pointer to the matching employee
+    }
+
+    return NULL; // Return NULL if no matching employee is found
 }
