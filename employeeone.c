@@ -1,43 +1,47 @@
-#include <string.h> 
+#include <string.h>
+#include "employee.h"
 
-#include "employee.h" 
+static PtrToEmployee searchEmployeeTable(PtrToConstEmployee ptr, int tableSize, const void *targetPtr,
+                                         int (*functionPtr)(const void *, PtrToConstEmployee))
+{
+    PtrToConstEmployee endPtr = ptr + tableSize;
 
-PtrToEmployee searchEmployeeByNumber(PtrToConstEmployee ptr, int tableSize, long targetNumber){ 
+    for (; ptr < endPtr; ptr++)
+    {
+        if ((*functionPtr)(targetPtr, ptr) == 0)
+        {
+            return (PtrToEmployee)ptr;
+        }
+    }
+    return NULL;
+}
 
-    const PtrToConstEmployee endPtr = ptr + tableSize; 
+static int compareEmployeeNumber(const void *targetPtr, PtrToConstEmployee tableValuePtr)
+{
+    return *(long *)targetPtr != tableValuePtr->number; // const void *targetPtr ==> typecast as int pointer then dereference
+}
 
-    for(; ptr < endPtr; ptr++) //search until end of table  ptr++ will increment by what?? 
+static int compareEmployeeName(const void *targetPtr, PtrToConstEmployee tableValuePtr)
+{
+    return strcmp((char *)targetPtr, tableValuePtr->name); // const void *targetPtr ==> typecast as char pointer then pass into strcmp()
+}
 
-    { 
+static int compareEmployeePhoneNumber(const void *targetPtr, PtrToConstEmployee tableValuePtr)
+{
+    return strcmp((char *)targetPtr, tableValuePtr->phone); // const void *targetPtr ==> typecast as char pointer then pass into strcmp()
+}
 
-        if(ptr->number == targetNumber) //check if it equals the Employee number 
+PtrToEmployee searchEmployeeByNumber(PtrToConstEmployee ptr, int size, long number)
+{
+    return searchEmployeeTable(ptr, size, &number, compareEmployeeNumber);
+}
 
-        return (PtrToEmployee) ptr; //return location of the number to callee. 
+PtrToEmployee searchEmployeeByName(PtrToConstEmployee ptr, int size, char *name)
+{
+    return searchEmployeeTable(ptr, size, name, compareEmployeeName);
+}
 
-    } 
-
-    return NULL; //this will only happen if no Employee number matches in loop above 
-
-} 
-
- 
-
-//Essentially the same functionality as above but comparing strings to check if equal 
-
-PtrToEmployee searchEmployeeByName(PtrToConstEmployee ptr, int tableSize, char * targetName){ 
-
-    const PtrToConstEmployee endPtr = ptr + tableSize; 
-
-    for(; ptr < endPtr; ptr++) 
-
-    { 
-
-        if(strcmp(ptr->name,targetName) == 0) 
-
-            return (PtrToEmployee) ptr; 
-
-    } 
-
-    return NULL; 
-
-} 
+PtrToEmployee searchEmployeeByPhoneNumber(PtrToConstEmployee ptr, int size, char *phoneNumber)
+{
+    return searchEmployeeTable(ptr, size, phoneNumber, compareEmployeePhoneNumber);
+}
